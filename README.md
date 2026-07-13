@@ -2,7 +2,7 @@
 Network-wide ad and malware domain blocking using Technitium DNS Server as a sinkhole on a Raspberry Pi 5.
 
 ## Overview
-Blocks malware as well as ads and trackers across entire home network, on every device. Block lists update automatically.
+Blocks malware, ads, and trackers across entire home network, on every device. Block lists update automatically.
 
 ## Hardware & Software
 - Raspberry Pi 5 (16GB RAM, storage, OS version)
