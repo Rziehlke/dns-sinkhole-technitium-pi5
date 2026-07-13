@@ -13,9 +13,21 @@ Blocks malware as well as ads and trackers across entire home network, on every 
 ![Network diagram](images/network-diagram.png)
 
 ## Setup
-The actual steps you took: OS install, static IP config,
-Technitium installation, blocklist configuration, pointing
-DHCP at the Pi. Include real commands in code blocks.
+Step 1: Download Raspberry Pi Imager on your Windows desktop from raspberrypi.com/software. Insert your microSD card (or USB SSD). Choose Raspberry Pi 5 as the device, Raspberry Pi OS Lite (64-bit) as the OS since you don't need a desktop for a headless server, and your card as storage.
+
+Step 2: When Imager asks 'Would you like to apply OS customisation settings?', click Edit Settings. Set a hostname (e.g. dns-pi), a username and strong password, and your locale. On the Services tab, enable SSH with password authentication. This is what lets you go headless from the first boot. Write the image, then screenshot these settings for your repo.
+
+Step 3: Insert the card, connect Ethernet (strongly preferred over Wi-Fi for a DNS server), and power on. Wait about a minute, then from Windows Terminal: ssh username@dns-pi.local (or find the IP in your router's client list). Accept the host key, log in, then run sudo apt update && sudo apt full-upgrade -y.
+
+Step 4: A DNS server needs a fixed address. Two options: reserve the Pi's IP in your router's DHCP settings (easier, survives OS reinstalls), or set it on the Pi with nmcli. Router reservation is the cleaner choice; note the MAC address with 'ip link' and reserve something like 192.168.1.53. Reboot and confirm the Pi comes up at that address.
+
+Step 5: Run the official installer: curl -sSL https://download.technitium.com/dns/install.sh | sudo bash. It installs the .NET runtime and Technitium as a systemd service. When it finishes, browse from your desktop to http://192.168.1.53:5380, create the admin account, and screenshot the dashboard for the repo.
+
+Step 6: In the Technitium web console go to Settings > Blocking. Add blocklist URLs; a solid starter set is Hagezi Multi Pro or the OISD Big list, both maintained and low on false positives. Set the blocklist auto-update interval. Under Settings > Proxy & Forwarders, set upstream resolvers (e.g. Cloudflare or Quad9) or leave it recursive.
+
+Step 7: From your desktop, test before committing the network: nslookup doubleclick.net 192.168.1.53 should return 0.0.0.0 or NXDOMAIN (blocked), while nslookup example.com 192.168.1.53 resolves normally. Check the Technitium dashboard logs to see your queries arriving.
+
+Step 8: In your router's DHCP settings, set the primary DNS server to the Pi's IP so every device picks it up on next lease renewal. Leave the secondary DNS blank if you want everything sinkholed, or accept that a public secondary lets devices bypass blocking when the Pi is slow. Renew a device's lease, browse for a while, and watch blocked queries climb on the dashboard.
 
 ## Blocklists Used
 Which lists, why you chose them, false positive handling.
