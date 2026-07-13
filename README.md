@@ -13,7 +13,7 @@ Blocks malware as well as ads and trackers across entire home network, on every 
 ![Network diagram](images/network-diagram.png)
 
 ## Setup
-Step 1: Download Raspberry Pi Imager on your Windows desktop from raspberrypi.com/software. Insert your microSD card (or USB SSD). Choose Raspberry Pi 5 as the device, Raspberry Pi OS Lite (64-bit) as the OS since you don't need a desktop for a headless server, and your card as storage.
+Step 1: Download Raspberry Pi Imager on your Windows desktop from raspberrypi.com/software. Insert your microSD card (or USB SSD). Choose Raspberry Pi 5 as the device, Raspberry Pi OS (other) > Raspberry Pi OS Lite (64-bit) as the OS since you don't need a desktop for a headless server, and your card as storage.
 
 Step 2: When Imager asks 'Would you like to apply OS customisation settings?', click Edit Settings. Set a hostname (e.g. dns-pi), a username and strong password, and your locale. On the Services tab, enable SSH with password authentication. This is what lets you go headless from the first boot. Write the image, then screenshot these settings for your repo.
 
@@ -37,8 +37,7 @@ Screenshots of the dashboard. Queries blocked per day,
 top blocked domains. Numbers make it concrete.
 
 ## Problems I Ran Into
-The most valuable section. What broke, how you diagnosed it,
-how you fixed it.
+Accidentally installed the full Raspberry Pi OS on the flash drive, so had to re-install the Lite version. Make sure to select 'Raspberry Pi OS (other)' to access the Lite version using the Raspberry Pi Imager software.
 
 ## What I'd Do Differently
 Shows growth. Maybe HA with a second Pi, DoH upstream, etc.
