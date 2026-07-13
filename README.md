@@ -15,6 +15,8 @@ Blocks malware as well as ads and trackers across entire home network, on every 
 ## Setup
 Step 1: Download Raspberry Pi Imager on your Windows desktop from raspberrypi.com/software. Insert your microSD card (or USB SSD). Choose Raspberry Pi 5 as the device, Raspberry Pi OS (other) > Raspberry Pi OS Lite (64-bit) as the OS since you don't need a desktop for a headless server, and your card as storage.
 
+![Network diagram](images/screenshot-raspberry-pi-imager.png)
+
 Step 2: When Imager asks 'Would you like to apply OS customisation settings?', click Edit Settings. Set a hostname (e.g. dns-pi), a username and strong password, and your locale. On the Services tab, enable SSH with password authentication. This is what lets you go headless from the first boot. Write the image, then screenshot these settings for your repo.
 
 Step 3: Insert the card, connect Ethernet (strongly preferred over Wi-Fi for a DNS server), and power on. Wait about a minute, then from Windows Terminal: ssh username@dns-pi.local (or find the IP in your router's client list). Accept the host key, log in, then run sudo apt update && sudo apt full-upgrade -y.
