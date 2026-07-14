@@ -5,12 +5,8 @@ Network-wide ad and malware domain blocking using Technitium DNS Server as a sin
 Blocks malware, ads, and trackers across entire home network, on every device. Block lists update automatically.
 
 ## Hardware & Software
-- Raspberry Pi 5 (16GB RAM, storage, OS version)
-- Technitium DNS Server (version)
-- Network details (router model if relevant, static IP setup)
-
-## Network Diagram
-![Network diagram](images/network-diagram.png)
+- Raspberry Pi 5
+- Technitium DNS Server
 
 ## Setup
 Step 1: Download 'Raspberry Pi Imager' on your Windows desktop from raspberrypi.com/software. Insert your microSD card (or USB SSD). Choose Raspberry Pi 5 as the device, 'Raspberry Pi OS (other)' > 'Raspberry Pi OS Lite (64-bit)' as the OS since you don't need a desktop for a headless server, and your card as storage.
@@ -74,4 +70,4 @@ top blocked domains. Numbers make it concrete.
 3) Couldn't open query logs to verify settings in Technitium dashboard. Fixed by installing 'Query Logs (Sqlite)' in app store in the Technitium dashboard.
 
 ## What I'd Do Differently
-Shows growth. Maybe HA with a second Pi, DoH upstream, etc.
+I installed Technitium on the bare metal server. If I did this project again, I'd install Docker first and then install Technitium inside a Docker container instead, since it's more resource efficient and also easier to maintain, especially since I'll eventually be running multiple services from the Pi server.
