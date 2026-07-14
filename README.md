@@ -45,7 +45,7 @@ Step 8: In your router's DHCP settings, set the primary DNS server to the Pi's I
 
 ![SSH](images/screenshot-ssh.png)
 
-## Blocklists Used
+## Block Lists/Allow Lists Used
 !https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-allow.txt
 
 https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif-onlydomains.txt
