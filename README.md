@@ -57,10 +57,6 @@ https://github.com/xRuffKez/NRD/blob/main/lists/30-day/domains-only/nrd-30day_pa
 
 https://github.com/xRuffKez/NRD/blob/main/lists/30-day/domains-only/nrd-30day_part2.txt
 
-## Results
-Screenshots of the dashboard. Queries blocked per day,
-top blocked domains. Numbers make it concrete.
-
 ## Problems I Ran Into
 1) Accidentally installed the full Raspberry Pi OS on the flash drive, so had to re-install the Lite version. Make sure to select 'Raspberry Pi OS (other)' to access the Lite version using the Raspberry Pi Imager software.
 
