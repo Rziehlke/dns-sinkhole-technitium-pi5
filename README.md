@@ -57,7 +57,11 @@ Screenshots of the dashboard. Queries blocked per day,
 top blocked domains. Numbers make it concrete.
 
 ## Problems I Ran Into
-Accidentally installed the full Raspberry Pi OS on the flash drive, so had to re-install the Lite version. Make sure to select 'Raspberry Pi OS (other)' to access the Lite version using the Raspberry Pi Imager software.
+1) Accidentally installed the full Raspberry Pi OS on the flash drive, so had to re-install the Lite version. Make sure to select 'Raspberry Pi OS (other)' to access the Lite version using the Raspberry Pi Imager software.
+
+2) Couldn't find the Pi Server on my Google Wifi router app. Fixed by unplugging Raspberry Pi power cable for 10 seconds and replugging, to reset server and also reset entire network from Google WiFi app.
+
+3) Couldn't open query logs to verify settings in Technitium dashboard. Fixed by installing 'Query Logs (Sqlite)' in app store in the Technitium dashboard.
 
 ## What I'd Do Differently
 Shows growth. Maybe HA with a second Pi, DoH upstream, etc.
