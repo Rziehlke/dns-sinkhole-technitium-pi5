@@ -25,7 +25,7 @@ Step 3: Insert the card, connect Ethernet (strongly preferred over Wi-Fi for a D
 
 ![SSH](images/screenshot-ssh.png)
 
-Step 4: A DNS server needs a fixed address. Two options: reserve the Pi's IP in your router's DHCP settings (easier, survives OS reinstalls), or set it on the Pi with nmcli. Router reservation is the cleaner choice; note the MAC address with 'ip link' and reserve something like 192.168.1.53. Reboot and confirm the Pi comes up at that address.
+Step 4: A DNS server needs a fixed address. Two options: reserve the Pi's IP in your router's DHCP settings (easier, survives OS reinstalls), or set it on the Pi with nmcli. Router reservation is the cleaner choice; note the MAC address with 'ip link' and reserve something like 192.168.1.53. Reboot the Pi Server (sudo reboot) and confirm the Pi comes up at that address.
 
 Step 5: Run the official installer: curl -sSL https://download.technitium.com/dns/install.sh | sudo bash. It installs the .NET runtime and Technitium as a systemd service. When it finishes, browse from your desktop to http://192.168.1.53:5380, create the admin account, and screenshot the dashboard for the repo.
 
