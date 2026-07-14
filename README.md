@@ -35,7 +35,7 @@ Step 5: Run the official installer: curl -sSL https://download.technitium.com/dn
 
 Step 6: In the Technitium web console go to Settings > Blocking. Add blocklist URLs; a solid starter set is Hagezi Multi Pro or the OISD Big list, both maintained and low on false positives. Set the blocklist auto-update interval. Under Settings > Proxy & Forwarders, set upstream resolvers (e.g. Cloudflare or Quad9) or leave it recursive.
 
-![SSH](images/screenshot-ssh.png)
+![Technitium Block List](images/screenshot-technitium-blocklist.png)
 
 Step 7: From your desktop, test before committing the network: nslookup doubleclick.net 192.168.1.53 should return 0.0.0.0 or NXDOMAIN (blocked), while nslookup example.com 192.168.1.53 resolves normally. Check the Technitium dashboard logs to see your queries arriving.
 
