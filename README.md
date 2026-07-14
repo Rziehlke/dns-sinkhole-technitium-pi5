@@ -50,7 +50,21 @@ Step 9: In your router's DHCP settings, set the primary DNS server to the Pi's I
 ![SSH](images/screenshot-ssh.png)
 
 ## Blocklists Used
-Which lists, why you chose them, false positive handling.
+!https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-allow.txt
+
+https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif-onlydomains.txt
+
+https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro-onlydomains.txt
+
+https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/dyndns-onlydomains.txt
+
+https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/hoster-onlydomains.txt
+
+https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-aggressive.txt
+
+https://github.com/xRuffKez/NRD/blob/main/lists/30-day/domains-only/nrd-30day_part1.txt
+
+https://github.com/xRuffKez/NRD/blob/main/lists/30-day/domains-only/nrd-30day_part2.txt
 
 ## Results
 Screenshots of the dashboard. Queries blocked per day,
