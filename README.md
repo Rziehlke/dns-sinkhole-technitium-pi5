@@ -27,6 +27,8 @@ Step 3: Insert the card, connect Ethernet (strongly preferred over Wi-Fi for a D
 
 Step 4: A DNS server needs a fixed address. Two options: reserve the Pi's IP in your router's DHCP settings (easier, survives OS reinstalls), or set it on the Pi with nmcli. Router reservation is the cleaner choice; note the MAC address with 'ip link' and reserve something like 192.168.1.53. Reboot the Pi Server (sudo reboot) and confirm the Pi comes up at that address.
 
+![DHCP Reservation](images/screenshot-DHCP-reservation.png)
+
 Step 5: Run the official installer: curl -sSL https://download.technitium.com/dns/install.sh | sudo bash. It installs the .NET runtime and Technitium as a systemd service. When it finishes, browse from your desktop to http://192.168.1.53:5380, create the admin account, and screenshot the dashboard for the repo.
 
 Step 6: In the Technitium web console go to Settings > Blocking. Add blocklist URLs; a solid starter set is Hagezi Multi Pro or the OISD Big list, both maintained and low on false positives. Set the blocklist auto-update interval. Under Settings > Proxy & Forwarders, set upstream resolvers (e.g. Cloudflare or Quad9) or leave it recursive.
