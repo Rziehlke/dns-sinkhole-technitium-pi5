@@ -33,7 +33,7 @@ Step 5: Run the official installer: curl -sSL https://download.technitium.com/dn
 
 ![Technitium Install](images/screenshot-technitium-install.png)
 
-Step 6: In the Technitium web console go to Settings > Blocking. Add blocklist URLs; a solid starter set is Hagezi Multi Pro or the OISD Big list, both maintained and low on false positives. Set the blocklist auto-update interval. Under Settings > Proxy & Forwarders, set upstream resolvers (e.g. Cloudflare or Quad9) or leave it recursive.
+Step 6: In the Technitium web console go to Settings > Blocking. Add blocklist URLs; a solid starter set is Hagezi Multi Pro or the OISD Big list, both maintained and low on false positives. Set the blocklist auto-update interval. Under Settings > Proxy & Forwarders, set upstream resolvers. I used Cloudflare and Quad9 over HTTPS.
 
 ![Technitium Block List](images/screenshot-technitium-blocklist.png)
 
