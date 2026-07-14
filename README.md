@@ -41,11 +41,7 @@ Step 7: Under Settings > Proxy & Forwarders, set upstream resolvers. I used Clou
 
 ![Technitium Forwarders](images/screenshot-technitium-forwarders.png)
 
-Step 8: From your desktop, test before committing the network: nslookup doubleclick.net 192.168.1.53 should return 0.0.0.0 or NXDOMAIN (blocked), while nslookup example.com 192.168.1.53 resolves normally. Check the Technitium dashboard logs to see your queries arriving.
-
-![SSH](images/screenshot-ssh.png)
-
-Step 9: In your router's DHCP settings, set the primary DNS server to the Pi's IP so every device picks it up on next lease renewal. Leave the secondary DNS blank if you want everything sinkholed, or accept that a public secondary lets devices bypass blocking when the Pi is slow. Renew a device's lease, browse for a while, and watch blocked queries climb on the dashboard.
+Step 8: In your router's DHCP settings, set the primary DNS server to the Pi's IP so every device picks it up on next lease renewal. Leave the secondary DNS blank if you want everything sinkholed, or accept that a public secondary lets devices bypass blocking when the Pi is slow. Renew a device's lease, browse for a while, and watch blocked queries climb on the dashboard.
 
 ![SSH](images/screenshot-ssh.png)
 
