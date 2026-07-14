@@ -6,6 +6,7 @@ Blocks malware, ads, and trackers across entire home network, on every device. B
 
 ## Hardware & Software
 - Raspberry Pi 5
+- Windows 11 PC for imaging and remote control of Pi server
 - Technitium DNS Server
 
 ## Setup
