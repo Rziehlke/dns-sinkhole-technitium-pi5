@@ -40,8 +40,6 @@ Step 7: Under Settings > Proxy & Forwarders, set upstream resolvers. I used Clou
 
 Step 8: In your router's DHCP settings, set the primary DNS server to the Pi's IP so every device picks it up on next lease renewal. Leave the secondary DNS blank if you want everything sinkholed, or accept that a public secondary lets devices bypass blocking when the Pi is slow. Renew a device's lease, browse for a while, and watch blocked queries climb on the dashboard.
 
-![SSH](images/screenshot-ssh.png)
-
 ## Block Lists/Allow Lists Used
 !https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-allow.txt
 
