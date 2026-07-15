@@ -22,6 +22,8 @@ The Pi acts as the DNS server for the entire home network. The router forwards e
 Internet -- Google Wifi router ~~ wireless backhaul ~~ mesh access point -- switch -- Raspberry Pi
 ```
 
+![Network diagram](images/network-diagram.png)
+
 ## Setup
 
 IP addresses in this document (192.168.1.x) are examples, not my real addresses.
