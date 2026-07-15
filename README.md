@@ -63,13 +63,45 @@ https://github.com/xRuffKez/NRD/blob/main/lists/30-day/domains-only/nrd-30day_pa
 https://github.com/xRuffKez/NRD/blob/main/lists/30-day/domains-only/nrd-30day_part2.txt
 
 ## Problems I Ran Into
-1) Accidentally installed the full Raspberry Pi OS on the flash drive, so had to re-install the Lite version. Make sure to select 'Raspberry Pi OS (other)' to access the Lite version using the Raspberry Pi Imager software.
 
-2) Couldn't find the Pi Server on my Google Wifi router app device list, to locate the IP address. Fixed by unplugging Raspberry Pi power cable for 10 seconds and replugging, to reset server and also reset entire network from Google WiFi app.
+### Installed the wrong OS image
+**Problem:** I flashed the full desktop version of Raspberry Pi OS when I
+only needed a headless server, so I had to reflash.
 
-3) Couldn't open query logs to verify settings in Technitium dashboard. Fixed by installing 'Query Logs (Sqlite)' in app store in the Technitium dashboard.
+**Solution:** In Raspberry Pi Imager, the Lite version is hidden under
+**Raspberry Pi OS (other)**. That submenu has Raspberry Pi OS Lite (64-bit).
+
+### Pi didn't appear in the Google Home device list
+**Problem:** After first boot, the Pi never showed up in the Google Wifi
+app's device list, so I had no IP address to SSH to.
+
+**Solution:** Power cycled the Pi (unplugged for 10 seconds) so it would
+request a fresh DHCP lease, and restarted the network from the Google Home
+app. The Pi appeared once everything came back up. I then reserved its IP
+in DHCP so the address survives future reboots.
+
+### Query Logs page wouldn't open
+**Problem:** I couldn't open the query logs in the Technitium dashboard to
+verify my settings were working.
+
+**Solution:** Query logging is an add-on, not a built-in feature. Installing
+the **Query Logs (Sqlite)** app from the Apps section of the dashboard
+enabled it.
+
+### My own router was being refused DNS service
+**Problem:** The dashboard showed an unknown public IP being refused on
+every query. It turned out to be my own router. Its system queries arrive
+sourced from the WAN interface address, which my recursion policy treated
+as an external client.
+
+**Solution:** Set **Settings > Recursion** to "Allow Recursion Only For
+Specified Networks" and listed `192.168.86.0/24` (my LAN), `127.0.0.0/8`
+(the Pi itself), and the router's WAN address as a `/32`. This is safe only
+because it is my own static IP. Outside packets can't reach the Pi claiming
+that source, since the router doesn't forward port 53 inbound. If my ISP
+ever changes the address, this entry needs updating.
 
 ## What I'd Do Differently
-I installed Technitium on the bare metal server. If I did this project again, I'd install Docker first and then install Technitium inside a Docker container instead, since it's more resource efficient and also easier to maintain. Containers make a lot of sense, since I'll eventually be running multiple services from the Pi server.
+1) I installed Technitium on the bare metal server. If I did this project again, I'd install Docker first and then install Technitium inside a Docker container instead, since it's more resource efficient and also easier to maintain. Containers make a lot of sense, since I'll eventually be running multiple services from the Pi server.
 
-Also, while Technitium is a fantastic DNS service, it's a little more than I really need for my home network, so I'd probably switch to AdGuard Home next time, which is simpler and less resource intensive.
+2) While Technitium is a fantastic DNS service, it's a little more than I really need for my home network, so I'd probably switch to AdGuard Home next time, which is simpler and less resource intensive.
