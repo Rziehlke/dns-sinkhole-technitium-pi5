@@ -95,7 +95,7 @@ sourced from the WAN interface address, which my recursion policy treated
 as an external client.
 
 **Solution:** Set **Settings > Recursion** to "Allow Recursion Only For
-Specified Networks" and listed `192.168.86.0/24` (my LAN), `127.0.0.0/8`
+Specified Networks" and listed `Private IP/24` (my LAN), `127.0.0.0/8`
 (the Pi itself), and the router's WAN address as a `/32`. This is safe only
 because it is my own static IP. Outside packets can't reach the Pi claiming
 that source, since the router doesn't forward port 53 inbound. If my ISP
