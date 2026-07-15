@@ -87,9 +87,9 @@ Google Wifi doesn't allow changing the DNS server it hands out over DHCP; client
 
 ## Results
 
-After the first full day, the dashboard showed 8,319 total queries with roughly 20% blocked, drawing on just under 2 million domains loaded across the block lists. The Blocked count tracks the NXDOMAIN count almost exactly, which is expected with the blocking type set to NX Domain.
+After the first full day, the dashboard showed 18,122 total queries with roughly 35% blocked, drawing on just under 2 million domains loaded across the block lists. The Blocked count tracks the NXDOMAIN count almost exactly, which is expected with the blocking type set to NX Domain.
 
-![Technitium dashboard after day one](images/Screenshot-technitium-dashboard-stats.png)
+![Technitium dashboard after day one](images/technitium-dashboard-stats.png)
 
 ## Block Lists and Allow Lists
 
