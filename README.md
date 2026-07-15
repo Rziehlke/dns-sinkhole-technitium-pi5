@@ -104,5 +104,3 @@ ever changes the address, this entry needs updating.
 
 ## What I'd Do Differently
 1) I installed Technitium on the bare metal server. If I did this project again, I'd install Docker first and then install Technitium inside a Docker container instead, since it's more resource efficient and also easier to maintain. Containers make a lot of sense, since I'll eventually be running multiple services from the Pi server.
-
-2) While Technitium is a fantastic DNS service, it's a little more than I really need for my home network, so I'd probably switch to AdGuard Home next time, which is simpler and less resource intensive.
