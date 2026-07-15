@@ -1,106 +1,145 @@
 # DNS Sinkhole on Raspberry Pi 5 (Technitium DNS)
-Network-wide ad and malware domain blocking using Technitium DNS Server as a sinkhole on a Raspberry Pi 5.
+
+Network-wide ad, tracker, and malware blocking on a Raspberry Pi 5 running Technitium DNS Server. Every device on the network is covered automatically, with no client software, and upstream DNS leaves the network encrypted.
 
 ## Overview
-Blocks malware, ads, and trackers across entire home network, on every device. Block lists update automatically.
+
+The Pi acts as the DNS server for the entire home network. The router forwards every device's DNS queries to it. Technitium answers queries for known ad, tracker, and malware domains with NXDOMAIN, so blocked domains simply appear not to exist, and resolves legitimate queries through encrypted upstream resolvers (DNS-over-HTTPS). Block lists refresh automatically on a schedule.
 
 ## Hardware & Software
-- Raspberry Pi 5
-- Windows 11 PC for imaging and remote control of Pi server
-- Technitium DNS
+
+- Raspberry Pi 5 with microSD storage, connected over Ethernet
+- Google Wifi mesh (router downstairs, wired access point upstairs)
+- Unmanaged Ethernet switch
+- Windows 11 PC for imaging and SSH administration
+- Raspberry Pi OS Lite (64-bit)
 - Raspberry Pi Imager
+- Technitium DNS Server
+
+## Network Layout
+
+```
+Internet -- Google Wifi router ~~ wireless backhaul ~~ mesh access point -- switch -- Raspberry Pi
+```
 
 ## Setup
-Step 1: Download 'Raspberry Pi Imager' on your Windows desktop from raspberrypi.com/software. Insert your microSD card (or USB SSD). Choose Raspberry Pi 5 as the device, 'Raspberry Pi OS (other)' > 'Raspberry Pi OS Lite (64-bit)' as the OS since you don't need a desktop for a headless server, and your card as storage.
 
-![Raspberry Pi OS Lite](images/screenshot-raspberry-pi-imager.png)
+IP addresses in this document (192.168.1.x) are examples, not my real addresses.
 
-Step 2: When Imager asks 'Would you like to apply OS customisation settings?', click Edit Settings. Set a hostname (e.g. dns-pi), a username and strong password, and your locale. On the Services tab, enable SSH with password authentication. This is what lets you go headless from the first boot. Write the image.
+### 1. Flash Raspberry Pi OS Lite
 
-![NRaspberry Pi Imager Customization Settings](images/screenshot-imager-customization.png)
+I used Raspberry Pi Imager on my Windows desktop. Device: Raspberry Pi 5. Operating system: **Raspberry Pi OS (other) > Raspberry Pi OS Lite (64-bit)**, since a headless server has no need for a desktop environment. Storage: the microSD card.
 
-Step 3: Insert the card, connect Ethernet (strongly preferred over Wi-Fi for a DNS server), and power on. Wait about a minute, then from Windows Terminal: 'ssh username@IPAddress'. Accept the host key, log in, then run 'sudo apt update && sudo apt full-upgrade -y'.
+![Raspberry Pi Imager OS selection](images/screenshot-raspberry-pi-imager.png)
 
-![SSH](images/screenshot-ssh.png)
+### 2. Preconfigure the OS in Imager
 
-Step 4: A DNS server needs a fixed address. Two options: reserve the Pi's IP in your router's DHCP settings (easier, survives OS reinstalls), or set it on the Pi with nmcli. Router reservation is the cleaner choice; note the MAC address with 'ip link' and reserve something like '192.168.1.53'. Reboot the Pi Server ('sudo reboot') and confirm the Pi comes up at that address.
+When Imager offered to apply OS customisation settings, I set a hostname, a username and strong password, and my locale, and enabled SSH with password authentication on the Services tab. This makes the Pi reachable over the network from first boot, no monitor or keyboard required.
 
-![DHCP Reservation](images/screenshot-DHCP-reservation.png)
+![Raspberry Pi Imager customisation settings](images/screenshot-imager-customization.png)
 
-Step 5: Run the official installer: 'curl -sSL https://download.technitium.com/dns/install.sh | sudo bash'. It installs the .NET runtime and Technitium as a systemd service. When it finishes, browse from your desktop to 'http://IPAddress', and create the admin account.
+### 3. First boot and SSH in
 
-![Technitium Install](images/screenshot-technitium-install.png)
+I connected the Pi to the switch over Ethernet and powered it on. After about a minute, I connected from Windows Terminal and installed all available updates:
 
-Step 6: In the Technitium web console go to Settings > Blocking. Add blocklist URLs; a solid starter set is Hagezi Multi Pro or the OISD Big list, both maintained and low on false positives. Set the blocklist auto-update interval.
+```
+ssh <username>@<pi-ip-address>
+sudo apt update && sudo apt full-upgrade -y
+```
 
-![Technitium Block List](images/screenshot-technitium-blocklist.png)
+![First SSH session](images/screenshot-ssh.png)
 
-Step 7: Under Settings > Proxy & Forwarders, set upstream resolvers. I used Cloudflare and Quad9 over HTTPS.
+### 4. Reserve a static IP
 
-![Technitium Forwarders](images/screenshot-technitium-forwarders.png)
+A DNS server needs a fixed address. I reserved the Pi's IP in the router's DHCP settings rather than configuring a static address on the Pi itself, since a reservation survives OS reinstalls. I found the Pi's MAC address with `ip link`, created the reservation in the Google Home app, then rebooted with `sudo reboot` and confirmed the Pi came back up on the reserved address.
 
-Step 8: In your router's DHCP settings, set the primary DNS server to the Pi's IP so every device picks it up on next lease renewal. Leave the secondary DNS blank if you want everything sinkholed, or accept that a public secondary lets devices bypass blocking when the Pi is slow. Renew a device's lease, browse for a while, and watch blocked queries climb on the dashboard.
+![DHCP reservation](images/screenshot-DHCP-reservation.png)
+
+### 5. Install Technitium DNS
+
+I ran the official installer, which sets up the .NET runtime and Technitium as a systemd service:
+
+```
+curl -sSL https://download.technitium.com/dns/install.sh | sudo bash
+```
+
+When it finished, I opened the web console from my desktop at `http://<pi-ip-address>:5380` and created the admin account.
+
+![Technitium install](images/screenshot-technitium-install.png)
+
+### 6. Configure block lists
+
+In **Settings > Blocking** I added the block list URLs (full list below) and set the auto-update interval so the lists refresh on their own.
+
+![Technitium block list configuration](images/screenshot-technitium-blocklist.png)
+
+### 7. Set encrypted upstream resolvers
+
+Under **Settings > Proxy & Forwarders** I set the forwarder protocol to HTTPS and added Quad9 and Cloudflare as upstreams. Queries the Pi can't answer from cache leave the network as DNS-over-HTTPS instead of plaintext port 53 traffic.
+
+![Technitium forwarders](images/screenshot-technitium-forwarders.png)
+
+### 8. Point the network at the Pi
+
+Google Wifi doesn't allow changing the DNS server it hands out over DHCP; clients always receive the router's own address. Instead, under **Network settings > Advanced networking > DNS > Custom**, I pointed the router's DNS at the Pi, so the router forwards every device's queries to Technitium. I left the secondary DNS field empty: a public fallback would let queries silently bypass the sinkhole whenever the Pi was slow to answer, at the cost of making the Pi a single point of failure for the network's name resolution. One tradeoff of this forwarding approach is that queries arrive at the Pi sourced from the router, so the dashboard has limited per-device visibility.
 
 ## Results
-Here's what my dashboard looked like after the first day. Roughly 20% of my network's DNS requests were blocked.
 
-![Technitium DNS Request Results](images/Screenshot-technitium-dashboard-stats.png)
+After the first full day, the dashboard showed 8,319 total queries with roughly 20% blocked, drawing on just under 2 million domains loaded across the block lists. The Blocked count tracks the NXDOMAIN count almost exactly, which is expected with the blocking type set to NX Domain.
 
-## Block Lists/Allow Lists Used
-!https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-allow.txt
+![Technitium dashboard after day one](images/Screenshot-technitium-dashboard-stats.png)
 
-https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif-onlydomains.txt
+## Block Lists and Allow Lists
 
-https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro-onlydomains.txt
+All lists come from the [Hagezi DNS Blocklists](https://github.com/hagezi/dns-blocklists) and [NRD](https://github.com/xRuffKez/NRD) projects.
 
-https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/dyndns-onlydomains.txt
+**Block lists**
 
-https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/hoster-onlydomains.txt
+- **Hagezi Multi Pro**: the main ad, tracker, and telemetry list
+  `https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro-onlydomains.txt`
+- **Hagezi Threat Intelligence Feeds**: malware, phishing, and scam domains
+  `https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/tif-onlydomains.txt`
+- **Hagezi Dynamic DNS**: dynamic DNS providers frequently abused for phishing
+  `https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/dyndns-onlydomains.txt`
+- **Hagezi Badware Hoster**: hosting services frequently abused to serve malware
+  `https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/hoster-onlydomains.txt`
+- **Hagezi Spam TLDs (aggressive)**: blocks entire top-level domains with high abuse rates
+  `https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-aggressive.txt`
+- **NRD 30-day, parts 1 and 2**: domains registered within the last 30 days, a common marker of phishing and scam infrastructure
+  `https://raw.githubusercontent.com/xRuffKez/NRD/main/lists/30-day/domains-only/nrd-30day_part1.txt`
+  `https://raw.githubusercontent.com/xRuffKez/NRD/main/lists/30-day/domains-only/nrd-30day_part2.txt`
 
-https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-aggressive.txt
+**Allow list**
 
-https://github.com/xRuffKez/NRD/blob/main/lists/30-day/domains-only/nrd-30day_part1.txt
-
-https://github.com/xRuffKez/NRD/blob/main/lists/30-day/domains-only/nrd-30day_part2.txt
+- **Hagezi Spam TLDs allow list**: companion list that restores legitimate domains on otherwise-blocked TLDs
+  `https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-allow.txt`
 
 ## Problems I Ran Into
 
 ### Installed the wrong OS image
-**Problem:** I flashed the full desktop version of Raspberry Pi OS when I
-only needed a headless server, so I had to reflash.
 
-**Solution:** In Raspberry Pi Imager, the Lite version is hidden under
-**Raspberry Pi OS (other)**. That submenu has Raspberry Pi OS Lite (64-bit).
+**Problem:** I flashed the full desktop version of Raspberry Pi OS when I only needed a headless server, so I had to reflash.
+
+**Solution:** In Raspberry Pi Imager, the Lite version is hidden under **Raspberry Pi OS (other)**. That submenu has Raspberry Pi OS Lite (64-bit).
 
 ### Pi didn't appear in the Google Home device list
-**Problem:** After first boot, the Pi never showed up in the Google Wifi
-app's device list, so I had no IP address to SSH to.
 
-**Solution:** Power cycled the Pi (unplugged for 10 seconds) so it would
-request a fresh DHCP lease, and restarted the network from the Google Home
-app. The Pi appeared once everything came back up. I then reserved its IP
-in DHCP so the address survives future reboots.
+**Problem:** After first boot, the Pi never showed up in the Google Wifi app's device list, so I had no IP address to SSH to.
+
+**Solution:** Power cycled the Pi (unplugged for 10 seconds) so it would request a fresh DHCP lease, and restarted the network from the Google Home app. The Pi appeared once everything came back up. I then reserved its IP in DHCP so the address survives future reboots.
 
 ### Query Logs page wouldn't open
-**Problem:** I couldn't open the query logs in the Technitium dashboard to
-verify my settings were working.
 
-**Solution:** Query logging is an add-on, not a built-in feature. Installing
-the **Query Logs (Sqlite)** app from the Apps section of the dashboard
-enabled it.
+**Problem:** I couldn't open the query logs in the Technitium dashboard to verify my settings were working.
+
+**Solution:** Query logging is an add-on, not a built-in feature. Installing the **Query Logs (Sqlite)** app from the Apps section of the dashboard enabled it.
 
 ### My own router was being refused DNS service
-**Problem:** The dashboard showed an unknown public IP being refused on
-every query. It turned out to be my own router. Its system queries arrive
-sourced from the WAN interface address, which my recursion policy treated
-as an external client.
 
-**Solution:** Set **Settings > Recursion** to "Allow Recursion Only For
-Specified Networks" and listed `Private IP/24` (my LAN), `127.0.0.0/8`
-(the Pi itself), and the router's WAN address as a `/32`. This is safe only
-because it is my own static IP. Outside packets can't reach the Pi claiming
-that source, since the router doesn't forward port 53 inbound. If my ISP
-ever changes the address, this entry needs updating.
+**Problem:** The dashboard showed an unknown public IP being refused on every query. It turned out to be my own router. Its system queries arrive sourced from the WAN interface address, which my recursion policy treated as an external client.
+
+**Solution:** Set **Settings > Recursion** to "Allow Recursion Only For Specified Networks" and listed `192.168.1.0/24` (my LAN), `127.0.0.0/8` (the Pi itself), and the router's WAN address as a `/32`. This is safe only because it is my own static IP. Outside packets can't reach the Pi claiming that source, since the router doesn't forward port 53 inbound. If my ISP ever changes the address, this entry needs updating.
 
 ## What I'd Do Differently
-1) I installed Technitium on the bare metal server. If I did this project again, I'd install Docker first and then install Technitium inside a Docker container instead, since it's more resource efficient and also easier to maintain. Containers make a lot of sense, since I'll eventually be running multiple services from the Pi server.
+
+Install Docker first and run Technitium in a container. Bare metal works fine and is what I have now, but I plan to run more services on this Pi over time, and containers keep each service isolated and easy to upgrade or roll back without disturbing the rest of the system.
