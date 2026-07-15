@@ -7,7 +7,8 @@ Blocks malware, ads, and trackers across entire home network, on every device. B
 ## Hardware & Software
 - Raspberry Pi 5
 - Windows 11 PC for imaging and remote control of Pi server
-- Technitium DNS Server
+- Technitium DNS
+- Raspberry Pi Imager
 
 ## Setup
 Step 1: Download 'Raspberry Pi Imager' on your Windows desktop from raspberrypi.com/software. Insert your microSD card (or USB SSD). Choose Raspberry Pi 5 as the device, 'Raspberry Pi OS (other)' > 'Raspberry Pi OS Lite (64-bit)' as the OS since you don't need a desktop for a headless server, and your card as storage.
