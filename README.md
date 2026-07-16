@@ -18,11 +18,28 @@ The Pi acts as the DNS server for the entire home network. The router forwards e
 
 ## Network Layout
 
-```
-Internet -- Google Wifi router ~~ wireless backhaul ~~ mesh access point -- switch -- Raspberry Pi
-```
+```mermaid
+graph TD
+    Internet([Internet])
+    Modem[ISP Modem / ONT]
+    Router[Google Wifi Router]
+    Mesh[Mesh Access Point]
+    Switch[Network Switch]
+    Pi[Raspberry Pi]
 
-![Network diagram](images/network-diagram.png)
+    Internet ---|WAN / Fiber / Coax| Modem
+    Modem ---|Ethernet WAN| Router
+    Router -.-|Wireless Backhaul| Mesh
+    Mesh ---|Ethernet| Switch
+    Switch ---|Ethernet| Pi
+
+    classDef default fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef cloud fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef wireless stroke-dasharray: 5 5;
+    
+    class Internet cloud;
+    class Mesh wireless;
+```
 
 ## Setup
 
